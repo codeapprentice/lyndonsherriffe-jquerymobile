@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>StudyHelps.net</title>
+<meta name="viewport" content="width=device-width,user-scalable=no, initial-scale=1">
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.css" />
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB_rhUZ2m4XElLYhC6KeJ6zn9_4rd6qSx4&amp;sensor=true"></script>
+<script src="phonegap.js"></script>
+<script type='text/javascript' language='javascript'>
+$( document ).bind( "mobileinit", function() {
+    // Make your jQuery Mobile framework configuration changes here!
+    $.mobile.allowCrossDomainPages = true;
+     
+    $.mobile.defaultPageTransition = 'none';
+    $.mobile.defaultDialogTransition = 'none';
+    $("a").attr("data-transition", "none");
+});
+</script>
+
+<script type="text/javascript" charset="utf-8">
+var mapsapikey = "AIzaSyB_rhUZ2m4XElLYhC6KeJ6zn9_4rd6qSx4";
+var g_map=null;
+var g_marker=null;
+
+document.addEventListener("deviceready", onDeviceReady, false);
+function onDeviceReady()
+{
+    var options = { maximumAge: 3000, timeout: 5000, enableHighAccuracy: true };
+    
+    initializeMap();
+    
+    // watchID = navigator.geolocation.watchPosition(onGeoSuccess, onGeoError, options);
+    setInterval(function(){
+        navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError,options);
+    },2000);
+}
+var updates=1;
+function onGeoSuccess(position) 
+{
+        if(g_map == null) return;
+        
+        var loc = new google.maps.LatLng( position.coords.latitude, position.coords.longitude );
+        g_map.setCenter(loc);
+       
+        if(g_marker){
+            g_marker.setMap(null);
+            g_marker=null;
+        }
+        
+        var options = {
+          strokeColor: '#FF0000',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#FF0000',
+          fillOpacity: 0.35,
+          map: g_map,
+          center: loc,
+          radius: 1
+        };
+        // Add the circle for this city to the map.
+        g_marker = new google.maps.Circle(options);
+        /*
+
+        var element = document.getElementById('geolocation');
+        element.innerHTML = '('+updates+') Latitude: '  + position.coords.latitude      + '<br />' +
+                            'Longitude: ' + position.coords.longitude     + '<br />' +
+                            '<hr />';
+        */
+        updates++;
+}
+
+    // onError Callback receives a PositionError object
+    //
+function onGeoError(error) {
+        alert('code: '    + error.code    + '\n' +
+              'message: ' + error.message + '\n');
+}
+function initializeMap()
+{
+    console.log('initializing map');
+    var mapOptions = {
+          center: new google.maps.LatLng(-34.397, 150.644),
+          zoom: 25
+    };
+    g_map = new google.maps.Map(document.getElementById("mapdiv"),mapOptions);
+}
+//google.maps.event.addDomListener(window, 'load', initializeMap);
+
+</script>
+</head>
+<body>
+
+<div id='page-home' data-role="page" data-transition='none'>
+	<div data-role="header">
+		<h1>Testing the GPS Accuracy</h1>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+		<div id='mapdiv' style='width:100%;height:400px;background-color:#ffffff;'><p>Home Page content goes here.</p></div>
+	</div><!-- /content -->
+
+	<div data-role="footer">
+		<a href="#page-home"  data-transition='none' data-role="button" >Page 1</a>
+    	<a href="#page-page2"  data-transition='none' data-role="button" >Page 2</a>
+    	<a href="#page-page3"  data-transition='none' data-role="button" >Page 3</a>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+<div id='page-page2' data-role="page" data-add-back-btn="true"  data-transition='none'>
+	<div data-role="header">
+		<h1>Page 2</h1>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+		<div style='margin:40px;width:90%;height:300px;background-color:red;'><p>Page 2 content goes here.</p></div>		
+	</div><!-- /content -->
+
+	<div data-role="footer">
+		<a href="#page-home"  data-transition='none' data-role="button" >Page 1</a>
+    	<a href="#page-page2" data-transition='none' data-role="button" >Page 2</a>
+    	<a href="#page-page3" data-transition='none' data-role="button" >Page 3</a>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+<div id='page-page3' data-role="page" data-add-back-btn="true" data-transition='none'>
+	<div data-role="header">
+		<h1>Page 3</h1>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+		<div style='margin:40px;width:90%;height:300px;background-color:green;'><p>Page 3 content goes here.</p></div>		
+	</div><!-- /content -->
+
+	<div data-role="footer">
+		<a href="#page-home" data-transition='none'  data-role="button" >Page 1</a>
+    	<a href="#page-page2" data-transition='none' data-role="button" >Page 2</a>
+    	<a href="#page-page3" data-transition='none' data-role="button" >Page 3</a>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+</body>
+</html>
